@@ -47,7 +47,7 @@ export function Dashboard({searchQuery, setSearchQuery}) {
                 setModalOpen(false);
               }}/>
             
-            <h2 className='text-3xl font-bold mb-4 -mt-20'>Wellcome to LinkStashHub!</h2>
+            <h2 className='text-3xl font-bold mb-4 -mt-20'>Wellcome to Second Brain Vault!</h2>
             <p className='text-lg mb-16 text-center'>
               Get started by adding your first content.
              <p> This dashboard helps you manage and organize everything in one
@@ -69,7 +69,7 @@ export function Dashboard({searchQuery, setSearchQuery}) {
             }
             </div>
             <div>
-            <div id='cards' className='flex gap-12 pt-6  flex-wrap'>
+            <div id='cards' className='flex gap-10 pt-6  flex-wrap'>
           {contents.filter((content) =>
                 content.tags.some((tag) =>
                   tag.includes(searchQuery.toLowerCase())

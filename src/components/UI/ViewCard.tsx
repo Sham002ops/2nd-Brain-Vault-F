@@ -1,4 +1,3 @@
-import { FacebookEmbed, InstagramEmbed, PinterestEmbed, XEmbed, YouTubeEmbed } from "react-social-media-embed";
 import DeleteIcon from "../../icons/DeleteIcon";
 
 import { ShareIcon } from  '../../icons/ShareIcon'
@@ -31,8 +30,9 @@ export const ViewCard = ({_id, onDelete,title, link,tags, type, description}: Ca
     //     return <DocIcon size="md" />;
     //   };
     
-    
-    
+        
+        const parts = link.split('/');
+        const pinId = parts[parts.length - 2];
         
 
         const handleDelete = async ()=> {
@@ -51,34 +51,62 @@ export const ViewCard = ({_id, onDelete,title, link,tags, type, description}: Ca
         <div className="">
             {rotateIg ?<div className="p-4  z-50 bg-white rounded-md border border-gray-300  
             max-w-72 min-h-52 min-w-min ">
-                 <div className=" w-full rounded-lg overflow-x-auto scrollbar-hide ">
-                   {type === "youtube" && <div className=" rounded-md p-1 mt-8 bg-gray-300">
-                    <YouTubeEmbed url={link} />
+                 <div className=" w-full rounded-lg overflow-hidden scrollbar-hide ">
+                   {type === "youtube" && <div className=" rounded-md p-1 mt-8">
+                    <div className=" bg-gray-300 -mt-8 p-1 rounded-md ">
+                    <iframe className="" width={900} height={500} src={link.replace("watch", "embed").replace("?v=", "/").split("&t=")[0]} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                    </div>
+                    <div>
+                    <Button  onClick={() => setRotateIg(!rotateIg)} size='xs' variant='primary' text='Short'/>
+                    </div>
                    </div>}
                    {type === "twitter" && <div  className="overflow-auto ">
-                    <XEmbed url={link} />
+                    <iframe
+                            src={`https://twitframe.com/show?url=${link.replace("x.com", "twitter.com")}`}
+                           height={600}
+                            frameBorder="0"
+                            scrolling="no"
+                            allowTransparency
+                        ></iframe>
                     </div>}
 
-                   {type === "instagram" &&  <div className=" pl-60 mx-32 overflow-auto  -mt-10 scrollbar-hide -mb-72 -rotate-90  -mr-10 "> <InstagramEmbed
-                    url={link} /> 
-                    <div>
-                 <Button  onClick={() => setRotateIg(!rotateIg)} size='sm' variant='primary' text='Rotate'/>
-                 </div>
+                   {type === "instagram" &&  <div className="  overflow-hidden ml-60   scrollbar-hide -my-96 -rotate-90 -mr-20 ">
+                    <iframe
+                                    src={`${link}embed`}
+                                    width="620"
+                                    height="1180"
+                                    frameBorder="0"
+                                    scrolling="no"
+                                    allowTransparency
+                                ></iframe> 
+                    
                             </div> }
-                   {type === "facebook" && <FacebookEmbed
-                            url={link}/>
+                   {type === "facebook" &&
+                   <iframe
+                   src={`https://www.facebook.com/plugins/post.php?href=${link}`}
+                   width=""
+                   height="300"
+                   style={{ border: "none", overflow: "hidden" }}
+                   scrolling="no"
+                   frameBorder="0"
+                   allowFullScreen={true}
+                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                   ></iframe>
                         }
                    {type === "pinterest" && <div  className=" overflow-auto" style={{ display: 'flex', justifyContent: 'center' }}>
-                            <PinterestEmbed 
-                                url={link}
-                                width={345}
-                                height={467}
-                            />
+                   <iframe
+                            src={`https://assets.pinterest.com/ext/embed.html?id=${pinId}`}
+                            width="320"
+                            height="400"
+                            frameBorder="0"
+                            scrolling="no"
+                            allowTransparency
+                        ></iframe>
                             </div>
                         }
 
                 </div> 
-                <div className=" justify-between pb-2">
+                <div className=" justify-between pt-2 pb-2">
                         <div className="flex justify-end gap-4">
                         <div className="text-gray-500  ">
                             <a href={link} target="_blank">
@@ -101,7 +129,8 @@ export const ViewCard = ({_id, onDelete,title, link,tags, type, description}: Ca
                         
                     <div className=" justify-start mt-6 ">
                     <hr className="my-2  border-gray-400" />
-                    <h1 className="text-gray-800 text-sm mt-1 font-bold">Tags</h1>         
+                    <h1 className="text-gray-800  text-sm mt-1 font-bold">Tags</h1>    
+                    <div className=" flex justify-between">     
                     <div className=" gap-2 flex-wrap   mt-1">
                         {(tags || []).map((tag, index) => (
                             <span
@@ -112,6 +141,10 @@ export const ViewCard = ({_id, onDelete,title, link,tags, type, description}: Ca
                             </span>
                         )) || <span>No tags available</span>}
                     </div>
+                    <div className=" ">
+                 <Button  onClick={() => setRotateIg(!rotateIg)} size='sm' variant="secondary" text='Rotate'/>
+                 </div>
+                 </div>
                 
                 </div>
                  
@@ -121,28 +154,60 @@ export const ViewCard = ({_id, onDelete,title, link,tags, type, description}: Ca
             </div>: <div className="p-4 flex  bg-white rounded-md border border-gray-300  
             max-w-72 min-h-52 min-w-min ">
                  <div className=" w-full rounded-lg overflow-auto hide-scrollbar ">
-                   {type === "youtube" && <div className=" rounded-md p-1 mt-8 bg-gray-300">
-                    <YouTubeEmbed url={link} />
+                   {type === "youtube" && <div className=" ">
+                    <div className="rounded-md p-1 mt-8 bg-gray-300">
+                    <iframe className="" src={link.replace("watch", "embed").replace("?v=", "/").split("&t=")[0]} title="YouTube video player" width={500} height={300} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                    </div>
+                    <div className=" pt-2">
+                    <Button  onClick={() => setRotateIg(!rotateIg)} size='md' variant='primary' text='Full'/>
+
+                    </div>
                    </div>}
-                   {type === "twitter" && <div  className=" ">
-                    <XEmbed url={link} />
+                   {type === "twitter" && <div  className=" overflow-auto justify-items-center -mt-4 ">
+                    <iframe
+                            src={`https://twitframe.com/show?url=${link.replace("x.com", "twitter.com")}`}
+                           width={330}
+                            height={640}
+                            frameBorder="0"
+                            scrolling="no"
+                            allowTransparency
+                        ></iframe>
                     </div>}
 
-                   {type === "instagram" &&  <div className="  overflow-auto "> <InstagramEmbed
-                    url={link} width={330}/> 
+                   {type === "instagram" &&  <div className="  overflow-auto "> 
+                    <iframe
+                                    src={`${link}embed`}
+                                    
+                                    height="600"
+                                    frameBorder="0"
+                                    scrolling="no"
+                                    allowTransparency
+                                ></iframe>
                     <div>
                     <Button  onClick={() => setRotateIg(!rotateIg)} size='sm' variant='primary' text='Rotate'/>
                     </div>
                             </div>}
-                   {type === "facebook" && <FacebookEmbed
-                            url={link}/>
+                   {type === "facebook" &&
+                    <iframe
+                    src={`https://www.facebook.com/plugins/post.php?href=${link}`}
+                    width="420"
+                    height="620"
+                    style={{ border: "none", overflow: "hidden" }}
+                    scrolling="no"
+                    frameBorder="0"
+                    allowFullScreen={true}
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                    ></iframe>
                         }
                    {type === "pinterest" && <div  className=" " style={{ display: 'flex', justifyContent: 'center' }}>
-                            <PinterestEmbed 
-                                url={link}
-                                width={345}
-                                height={600}
-                            />
+                   <iframe
+                            src={`https://assets.pinterest.com/ext/embed.html?id=${pinId}`}
+                            width="345"
+                            height="600"
+                            frameBorder="0"
+                            scrolling="no"
+                            allowTransparency
+                        ></iframe>
                             </div>
                         }
 

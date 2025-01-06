@@ -1,4 +1,3 @@
-import { FacebookEmbed, InstagramEmbed, PinterestEmbed, XEmbed } from "react-social-media-embed";
 import DeleteIcon from "../../icons/DeleteIcon";
 import DocIcon from "../../icons/DocIcon";
 import InstaIcon from "../../icons/InstaIcon";
@@ -33,7 +32,9 @@ export const Card = ({_id, onDelete,title, link,tags, type,onOpen}: CardProps & 
       };
     
     
-    
+      const parts = link.split('/');
+      const pinId = parts[parts.length - 2];
+      
         
 
         const handleDelete = async ()=> {
@@ -49,9 +50,9 @@ export const Card = ({_id, onDelete,title, link,tags, type,onOpen}: CardProps & 
         }
 
     return(
-        <div>
+        <div >
             <div className="p-4   bg-white rounded-2xl  shadow shadow-purple-300 border-slate-400 border
-            max-w-72 min-h-52 min-w-min ">
+            max-w-72 min-h-52 min-w-min " >
                  <div className="flex justify-between pb-2">
                     <div className="flex items-center text-md">
                         <div  className="text-gray-500 pr-2">
@@ -75,25 +76,59 @@ export const Card = ({_id, onDelete,title, link,tags, type,onOpen}: CardProps & 
                 <div className="pt-4 w-full rounded-lg overflow-hidden ">
                    {type === "youtube" &&  <iframe className="w-full -mt-4 h-36" src={link.replace("watch", "embed").replace("?v=", "/").split("&t=")[0]} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>}
 
-                   {type === "twitter" && <div  className=" flex-col w-80 -m-2 -mt-2 mb-4 justify-items-center  pt-2 -mr-8 -ml-8   h-72">
-                    <XEmbed url={link} />
-                    </div>}
+                   {type === "twitter" && <div className="  w-72 -ml-4 -mt-8 mr-2  ">
+                        <iframe
+                            src={`https://twitframe.com/show?url=${link.replace("x.com", "twitter.com")}`}
+                           height={330}
+                            frameBorder="0"
+                            scrolling="no"
+                            allowTransparency
+                        ></iframe>
+                        </div>
 
-                   {type === "instagram" && <div className=" flex-col w-80 -m-8 -mt-28 mb-36 justify-items-center  pt-2   h-72"> <InstagramEmbed
-                    url={link}/> 
+
+                                    }
+
+                   {type === "instagram" && <div className="  w-72  -mt-4 mr-2 -m-3   ">
+                                <iframe
+                                    src={`${link}embed`}
+                                    
+                                    height="380"
+                                    frameBorder="0"
+                                    scrolling="no"
+                                    allowTransparency
+                                ></iframe>
+                                </div>
+
+                        }
+                   {type === "facebook" && 
+                        <div className=" w-72  -mt-4 mr-2 -m-3">
+                       <iframe
+                            src={`https://www.facebook.com/plugins/post.php?href=${link}`}
+                            width=""
+                            height="300"
+                            style={{ border: "none", overflow: "hidden" }}
+                            scrolling="no"
+                            frameBorder="0"
+                            allowFullScreen={true}
+                            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                            ></iframe>
+                      </div>
+                      
+                        }
+                   {type === "pinterest" && <div className=" -m-8 -mt-6  -ml-9 mr-1 ">
                     
-                            </div>
-                        }
-                   {type === "facebook" && <FacebookEmbed
-                            url={link}/>
-                        }
-                   {type === "pinterest" && <div  className=" flex-col w-80  justify-items-center  -m-6 -mt-8 mb -ml-16  mr-4 pt-2   h-96" style={{ display: 'flex', justifyContent: 'center' }}>
-                            <PinterestEmbed 
-                                url={link}
-                                width={345}
-                                height={467}
-                            />
-                            </div>
+                        <iframe
+                            src={`https://assets.pinterest.com/ext/embed.html?id=${pinId}`}
+                            width="320"
+                            height="400"
+                            frameBorder="0"
+                            scrolling="no"
+                            allowTransparency
+                        ></iframe>
+                        </div>
+
+
                         }
 
                 </div> 

@@ -92,7 +92,7 @@ const ContentPage = ({type, searchQuery, setSearchQuery}: {type: "twitter" | "yo
        </div>
        </div>
       <div className=' relative ml-72 pl-12  bg-gray-300 min-h-screen overflow-auto scrollbar-hide'>
-       <div className='flex flex-wrap h-40 pt-6 gap-12'>
+       <div className='flex flex-wrap h-40 pt-6 gap-10'>
     {(() => {
         try {
             return content.filter((content) =>
