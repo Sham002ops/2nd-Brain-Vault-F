@@ -37,7 +37,7 @@ export function Dashboard({searchQuery, setSearchQuery}) {
 
 
   return (
-   <div className=' bg-gray-300 ml-72 relative pl-7'>
+   <div className=' bg-gray-300 ml-72 relative pl-3'>
       <Sidebar/>
         <Header/>
         <SearchBar setSearchQuery={setSearchQuery}  />
@@ -61,7 +61,7 @@ export function Dashboard({searchQuery, setSearchQuery}) {
             </div>
           </div>
         ) : ( 
-          <div>
+          <div className=' pl-6'>
             <div>
             {
               <ViewPost open={viewmodalOpen} onClose={()=>{

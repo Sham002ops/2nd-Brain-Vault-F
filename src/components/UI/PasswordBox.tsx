@@ -3,9 +3,10 @@ import  { useState } from 'react';
 interface InputProps {
     placeholder: string;
     reference?: React.RefObject<HTMLInputElement>;
+    onKeyDown?: (e)=> void,
 }
 
-export function PasswordBox({ reference, placeholder }: InputProps) {
+export function PasswordBox({ reference,onKeyDown, placeholder }: InputProps) {
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
@@ -19,6 +20,7 @@ export function PasswordBox({ reference, placeholder }: InputProps) {
                 placeholder={placeholder}
                 type={showPassword ? 'text' : 'password'}
                 className="text-gray-700 outline-none bg-transparent border-2 border-purple-700 rounded-lg py-2 px-4 text-xl placeholder-gray-500 w-full"
+                onKeyDown={onKeyDown}
             />
             <button
                 type="button"

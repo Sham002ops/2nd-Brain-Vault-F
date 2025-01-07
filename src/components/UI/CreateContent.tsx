@@ -21,11 +21,19 @@ const CreateContent = ({open, onClose} ) => {
     const titleRef = useRef<HTMLInputElement>(null);
     const linkRef = useRef<HTMLInputElement>(null);
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
+    const btnRef = useRef<HTMLButtonElement>(null);
     const [type, setType] = useState(ContentType.Youtube);
     const [tags, setTags] = useState<string[]>([]); 
     const [tagInput, setTagInput] = useState<string>("");
 
     const {refresh} = useContent()
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, nextRef: React.RefObject<HTMLInputElement> | React.RefObject<HTMLButtonElement> | React.RefObject<HTMLTextAreaElement>) => {
+        if (e.key === "Enter") {
+          nextRef.current?.focus();
+          nextRef.current?.click();
+        }
+      };
 
     const addTag = () => {
         if (tagInput.trim() && !tags.includes(tagInput)) {
@@ -43,6 +51,7 @@ const CreateContent = ({open, onClose} ) => {
         const title = titleRef.current?.value;
         const description = descriptionRef.current?.value;
         const link = linkRef.current?.value;
+
 
         await axios.post(`${BACKEND_URL}/api/v1/content`, {
             link,
@@ -84,9 +93,9 @@ const CreateContent = ({open, onClose} ) => {
                <h4 className='text-lg p-1 font-bold  text-gray-800'>Add Title and Link</h4>
                <div className='mr-2 ml-2  ' >
                <div className='flex justify-center pb-2'>
-                <Input size='md' reference={titleRef} placeholder={"Title"}/></div> 
+                <Input size='md' reference={titleRef} placeholder={"Title"}  onKeyDown={(e) => handleKeyDown(e, linkRef)}/></div> 
                <div className='flex justify-center'>
-                <Input reference={linkRef} size='md' placeholder={"Link"}/></div> 
+                <Input reference={linkRef} size='md' placeholder={"Link"}  onKeyDown={(e) => handleKeyDown(e, descriptionRef)}/></div> 
                </div>
                <div className='flex justify-center pt-2'>
                 <textarea ref={descriptionRef} className=' border-purple-700 border-2 outline-none w-64 h-16 rounded-md' placeholder={"Description"}/></div> 
@@ -101,12 +110,14 @@ const CreateContent = ({open, onClose} ) => {
                                                 onChange={(e) => setTagInput(e.target.value.toLowerCase())}
                                                 placeholder="Enter tag"
                                                 className="border-2 rounded-md outline-none border-purple-700 p-2"
+                                                onKeyDown={(e) => handleKeyDown(e, btnRef)}
                                             />
                                             <Button
                                                 text="Add Tag"
                                                 onClick={addTag}
                                                 variant="primary"
                                                 size="sm"
+                                                reference={btnRef}
                                             />
                                         </div>
                                         <div className="flex gap-2 mt-2 flex-wrap">

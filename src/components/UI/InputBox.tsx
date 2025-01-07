@@ -6,8 +6,9 @@ interface InputProps {
     Px?: "px2" |"px4" |"px6"|"px8"|"px10",
     Py?: "py2" |"py4" |"py6"|"py8"|"py10",
     onChange?: (e)=> void,
+    onKeyDown?: (e)=> void,
 }
-export function Input({reference, onChange, placeholder, size, value}:InputProps){
+export function Input({reference, onChange, onKeyDown, placeholder, size, value}:InputProps){
 
 //    const PxStyle ={
 //        "px2": "px-2" ,
@@ -36,6 +37,6 @@ const sizeStyles = {
 
     return <div>
         <input ref={reference}
-         placeholder={placeholder} type={"text"} onChange={onChange} value={value}  className={`text-gray-700 outline-none bg-transparent border-2 border-purple-700 rounded-lg  text-xl placeholder-gray-500 ${size ? sizeStyles[size]: ''}`}  />
+                 placeholder={placeholder} onKeyDown={onKeyDown} type={"text"} onChange={onChange} value={value}  className={`text-gray-700 outline-none bg-transparent border-2 border-purple-700 rounded-lg  text-xl placeholder-gray-500 ${size ? sizeStyles[size]: ''}`}  />
     </div>
 }    

@@ -1,17 +1,30 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Input } from '../UI/InputBox'
 import Button from '../UI/Button'
 import { BACKEND_URL } from '../../Config';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { PasswordBox } from '../UI/PasswordBox';
+import { ProcessingIcon } from '../UI/ProcessingIcon';
 
 const Signin = () => {
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
+    const btnRef = useRef<HTMLButtonElement>(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, nextRef: React.RefObject<HTMLInputElement> | React.RefObject<HTMLButtonElement>) => {
+      if (e.key === "Enter") {
+        nextRef.current?.focus();
+        nextRef.current?.click();
+      }
+    };
+
 async function signin (){
+  if (loading) return;
+  setLoading(true);
        try{
         const username = usernameRef.current?.value
         const password = passwordRef.current?.value
@@ -32,11 +45,13 @@ async function signin (){
         
         
     } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response && error.response.data.error) {
-        alert("Validation Error: " + error.response.data.error.message);
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        alert(` Error: ${error.response.data.error.message}`);
       } else {
-        alert("Password Don't Match");
+        alert("An unexpected error occurred.");
       }
+    } finally {
+      setLoading(false);
     }
   }
        
@@ -65,12 +80,12 @@ async function signin (){
         <h4 className='text-md font-mono'>Back To Your Second Brain You.! </h4>
         <div className='pt-10'>
         <div className='pb-2'>
-        <Input size='lx' reference={usernameRef} placeholder='Username'/>
+        <Input size='lx' reference={usernameRef} placeholder='Username' onKeyDown={(e) => handleKeyDown(e, passwordRef)}/>
         </div>
-        <PasswordBox reference={passwordRef} placeholder='Password'/>
+        <PasswordBox reference={passwordRef} placeholder='Password' onKeyDown={(e) => handleKeyDown(e, btnRef)}/>
         </div>
         <div className='flex justify-center  items-center pt-6'>
-        <Button  size='md' transition='1' onClick={signin}  variant='primary' fullWidth={true} loading={false} text='Sign In'/>
+        <Button reference={btnRef} size='md' transition='1' onClick={signin}   variant='primary' fullWidth={true} loading={loading} text="Sign In" endIcon={loading ? <ProcessingIcon/> : <></>} />
         </div>
         {/* </div> */}
      </div>

@@ -1,20 +1,32 @@
-import  { useRef } from 'react'
+import  { useRef, useState } from 'react'
 import { Input } from '../UI/InputBox'
 import Button from '../UI/Button'
-import { BACKEND_URL, SHARE_URL } from '../../Config';
+import { BACKEND_URL } from '../../Config';
 import {useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { PasswordBox } from '../UI/PasswordBox';
+import { ProcessingIcon } from '../UI/ProcessingIcon';
 
 const Signup = () => {
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const emailRef = useRef<HTMLInputElement>(null);
+    const btnRef = useRef<HTMLButtonElement>(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
 
+      const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, nextRef: React.RefObject<HTMLInputElement> | React.RefObject<HTMLButtonElement>) => {
+    if (e.key === "Enter") {
+      nextRef.current?.focus();
+      nextRef.current?.click();
+    }
+  };
+
 
 async function signup (){
+        if (loading) return;
+        setLoading(true);
         const username = usernameRef.current?.value
         const password = passwordRef.current?.value
         const email = emailRef.current?.value
@@ -27,7 +39,7 @@ async function signup (){
         })
       
         if(response.data.message === "User signed up"){
-          alert("You have Signed up");
+          
           navigate("/signin")
         } else {
           alert("Signup failed: " + response.data.message);
@@ -40,7 +52,9 @@ async function signup (){
            alert("An unexpected error occurred.");
         }
        }
-
+       finally {
+        setLoading(false);
+      }
         
     }
 
@@ -52,9 +66,7 @@ async function signup (){
 
         
     }
-    console.log(`signup.tsx: BACKEND_URL: ${BACKEND_URL}`);
-    console.log(`Shared URL: ${SHARE_URL}/api/v1/signup`);
-    
+  
     
 
 
@@ -83,15 +95,15 @@ async function signup (){
             <h4 className='text-md font-mono'>Just some detils to get you in.! </h4>
             <div className='pt-10'>
             <div className='pb-2'>
-            <Input size='2lx' reference={emailRef} placeholder='email@.com'/>
+            <Input size='2lx' reference={emailRef} placeholder='email@.com' onKeyDown={(e) => handleKeyDown(e, usernameRef)}/>
             </div>
             <div className='pb-2'>
-            <Input size='2lx'  reference={usernameRef} placeholder='Username'/>
+            <Input size='2lx'  reference={usernameRef} placeholder='Username' onKeyDown={(e) => handleKeyDown(e, passwordRef)}/>
             </div>
-            <PasswordBox reference={passwordRef} placeholder='Password'/>
+            <PasswordBox reference={passwordRef} placeholder='Password' onKeyDown={(e) => handleKeyDown(e, btnRef)}/>
             </div>
             <div className='flex justify-center  items-center pt-6'>
-            <Button  size='md' transition='1' onClick={signup}  variant='primary' fullWidth={true} loading={false} text='Sign Up'/>
+            <Button reference={btnRef} size='md' transition='1' onClick={signup}  variant='primary' fullWidth={true} loading={loading} text='Sign Up' endIcon={loading ? <ProcessingIcon/> : <></>} />
             </div>
             <h4 onClick={ToSignin} className=' flex justify-center text-centertext-sm mt-6 cursor-pointer font-mono'>Already Ragistered?  <h4 className='text-purple-700 ml-1 hover:underline '>Sign In</h4></h4>
             {/* </div> */}
