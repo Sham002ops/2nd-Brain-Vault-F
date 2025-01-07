@@ -1,4 +1,4 @@
-import  { ReactElement } from 'react'
+import  { memo, ReactElement } from 'react'
 
 type Variants ="primary" | "secondary"|"icon";
 export interface ButtonProps {
@@ -11,6 +11,8 @@ export interface ButtonProps {
     fullWidth?: boolean;
     loading?: boolean;
     transition?: "1" | "2" | "3" | "4";
+    reference?: React.RefObject<HTMLButtonElement>;
+    
 }
 
 const variantStyles = {
@@ -36,11 +38,10 @@ const sizeStyles = {
 }
 
 const defaultStyles = "rounded-md p-4 flex"
-const Button = ({variant, text, startIcon, onClick, endIcon, size,fullWidth, transition, loading}: ButtonProps) => {
+const Button = memo(({variant, text, startIcon, onClick, endIcon, size,fullWidth, reference,transition, loading}: ButtonProps) => {
   return <button onClick={onClick} className={` justify-center items-center ${transition ? transitionStyle[transition] : ''} ${variantStyles[variant]} ${sizeStyles[size]} ${defaultStyles}
-   ${fullWidth ? " w-full": ""} ${loading ? "opacity-45" : ""} `} disabled={loading}>
-    {startIcon ? <div className='pt-1 pr-2  '>{startIcon}</div>: null } {text}  {endIcon ? <div className=' pl-2 '>{endIcon}</div>: null }</button>
-}
+   ${fullWidth ? " w-full": ""} ${loading ? "opacity-70" : ""} `} disabled={loading} ref={reference}>
+    {startIcon ? <div className=' pr-2  '>{startIcon}</div>: null } {text}  {endIcon ? <div className=' pl-1 '>{endIcon}</div>: null }</button>
+})
 
-<Button variant="primary" size="md" onClick={()=>{}} text={"asd"} ></Button>
 export default Button

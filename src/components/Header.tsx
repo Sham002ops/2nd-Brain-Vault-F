@@ -6,25 +6,24 @@ import axios from 'axios';
 import CreateContent from './UI/CreateContent';
 import { useContent } from './hooks/useContent';
 import { ShareIcon } from '../icons/ShareIcon';
+import { ProcessingIcon } from './UI/ProcessingIcon';
 
 
 const Header = () => {
 
     const [modalOpen, setModalOpen]= useState(false);
       const [isSharing,  setSharing]= useState(false);
+      const [loading, setLoading] = useState(false);
       const {refresh} = useContent();
 
     async function toggelSharing() {
-        try {
+      if (loading) return;
+      setLoading(true);
+        try { 
+          const endpoint = `${BACKEND_URL}/api/v1/brain/share`;
+          const headers = { Authorization: localStorage.getItem("token") || "" };
             if(!isSharing){
-              await refresh()
-              const response = await axios.post(`${BACKEND_URL}/api/v1/brain/share`,{
-                share: true,
-              },{
-                headers: { 
-                  "Authorization" :localStorage.getItem("token")
-                }
-              });
+              const response = await axios.post(endpoint,{ share: true },{ headers });
               const newShareUrl = `${SHARE_URL}/${response.data.hash}`;
   
               try {
@@ -36,34 +35,27 @@ const Header = () => {
               }
               setSharing(true);
   
-            } else if(isSharing){
-                await axios.post(`${BACKEND_URL}/api/v1/brain/share`,
-                  {share: false},
-                  {
-                    headers:{
-                      "Authorization": localStorage.getItem("token")
-                    }
-                  }
-                );
-                  await refresh()
+            } else {
+                await axios.post(endpoint, {share: false},{ headers });
                   setSharing(false);
-                  alert("Sharing Stopped");
-                
+                  alert("Sharing Stopped");        
             }
+            await refresh();
         }
         catch (error){
-          console.error("error sharing:", error);
-          alert("Somthing went wrong. Please try again leter,")
-          
+          console.error("error sharing:", error);     
+        }
+        finally {
+          setLoading(false);
         }
       } 
 
       useEffect(()=>{
         refresh()
-      }, [modalOpen, refresh])
+      }, [refresh])
 
   return (
-    <div className='p-4 h-20 bg-gray-300 relative flex justify-between'>
+    <div className='p-3 h-20 bg-gray-300 relative flex justify-between'>
     <CreateContent open={modalOpen} onClose={()=>{
       setModalOpen(false);
     }}/>
@@ -71,16 +63,20 @@ const Header = () => {
     <div className=' mr-96 pr-60 '>  
       <span className='text-3xl font-bold text-gray-800'>All Links</span>
       </div> 
-   
     </div>
     
     <div className='flex items-center gap-4'>
-    <Button onClick={()=>{
-      setModalOpen(true)
-    }} startIcon={<PlusIcon size={'md'}/>} transition='1' size='sm'  variant='primary'text="Add Content"/>
+    <Button 
+    onClick={()=> setModalOpen(true)} 
+    startIcon={<PlusIcon size={'md'}/>} 
+    transition='1' 
+    size='sm'  
+    variant='primary'
+    text="Add Content"
+    />
 
     <div >
-    <Button onClick={toggelSharing} startIcon={<ShareIcon size={'md'}/>} size='md' variant='secondary' transition='3' text={isSharing ? 'End Sharing' :'Share Brain'}/>
+    <Button onClick={toggelSharing} startIcon={<ShareIcon size={'md'}/>} size='md' variant='secondary' transition='3' text={isSharing ? 'End Sharing' :'Share Brain'} loading={loading} endIcon={loading ? <ProcessingIcon/> : <></>}/>
     </div>
     </div> 
     
