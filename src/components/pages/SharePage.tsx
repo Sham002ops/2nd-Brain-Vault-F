@@ -50,8 +50,8 @@ export const SharePage: React.FC = () => {
     }, []);
 
     if(error) {
-        return  <div>
-        <div className="mt-48 flex items-center  justify-center text-red-600">
+        return  <div className=" h-screen -mt-60 bg-white">
+        <div className="mt-48 pt-40 flex items-center  justify-center text-red-600">
             <img className="h-48 w-72 pl-16" src={ExpiredImg} alt="Link Expired" />
             </div>
             <div className=" flex items-center justify-center text-2xl text-red-600">
@@ -75,7 +75,7 @@ export const SharePage: React.FC = () => {
       
 
     return(
-        <div className="p-4 min-h-screen  bg-gray-300">
+        <div className="p-4 min-h-screen  bg-white">
             <h1 className="text-3xl font-bold text-gray-700 mb-8 pl-2">{data?.username}'s Shared Content</h1>
             <div className="flex gap-4 flex-wrap">
                 {data?.content.map(({ _id,type, link, title}, index) => <ShareCard
