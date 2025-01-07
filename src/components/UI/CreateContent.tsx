@@ -7,6 +7,7 @@ import { BACKEND_URL } from '../../Config'
 import { useContent } from '../hooks/useContent'
 import TwitterImg  from '../../assets/twitterSearch.png'
 import  YtImg from '../../assets/ytSearch.png'
+import { ProcessingIcon } from './ProcessingIcon'
 
 enum ContentType {
     Youtube = "youtube",
@@ -23,6 +24,7 @@ const CreateContent = ({open, onClose} ) => {
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
     const btnRef = useRef<HTMLButtonElement>(null);
     const [type, setType] = useState(ContentType.Youtube);
+    const [loading, setLoading] = useState(false);
     const [tags, setTags] = useState<string[]>([]); 
     const [tagInput, setTagInput] = useState<string>("");
 
@@ -48,6 +50,8 @@ const CreateContent = ({open, onClose} ) => {
 
 
   async  function addContent(){
+    if (loading) return;
+    setLoading(true);
         const title = titleRef.current?.value;
         const description = descriptionRef.current?.value;
         const link = linkRef.current?.value;
@@ -69,6 +73,7 @@ const CreateContent = ({open, onClose} ) => {
 
         refresh()
         onClose();
+        setLoading(false);
     }
 
 
@@ -162,7 +167,7 @@ const CreateContent = ({open, onClose} ) => {
                     </div> 
                </div>
                 <div className='flex justify-center p-4 '>
-                <Button onClick={addContent} variant='primary'size='md' transition='1' text='Submit'/>
+                <Button onClick={addContent} variant='primary'size='md' transition='1' text='Submit' loading={loading} endIcon={loading ? <ProcessingIcon/> : <></>}/>
                 </div>
                 </div>
                 <div className='justify-center h-60 mt-4 '>
