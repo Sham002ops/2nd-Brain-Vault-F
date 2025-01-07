@@ -1,11 +1,12 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BACKEND_URL } from "../../Config";
-import { Card } from "../UI/Card";
 import ExpiredImg from '../../assets/LinkExpired.png'
 import Button from "../UI/Button";
 import ViewPost from "../UI/ViewPost";
+import { ShareCard } from "../UI/ShareCard";
+import { Processing } from "../../icons/processing";
 interface ShareContent  {
     username: string;
     content: {
@@ -43,6 +44,11 @@ export const SharePage: React.FC = () => {
 
     }, [shareLink]);
 
+    const handleOpen = useCallback((id: string) => {
+        setSelectedContentId(id);
+        setViewPostOpen(true);
+    }, []);
+
     if(error) {
         return  <div>
         <div className="mt-48 flex items-center  justify-center text-red-600">
@@ -61,23 +67,18 @@ export const SharePage: React.FC = () => {
 
     if (!data) {
         return (
-          <div className="min-h-screen flex items-center justify-center">
-            Loading...
+          <div className=" flex pt-80 items-center  justify-center">
+           <Processing/>
           </div>
         );
       }
-
-      const handleOpen = (id: string) => {
-        setSelectedContentId(id);
-        setViewPostOpen(true);
-      };
       
 
     return(
-        <div className="p-4 min-h-screen bg-gray-300">
-            <h1 className="text-2xl font-bold mb-4">{data?.username}'s Shared Content</h1>
+        <div className="p-4 min-h-screen  bg-gray-300">
+            <h1 className="text-3xl font-bold text-gray-700 mb-8 pl-2">{data?.username}'s Shared Content</h1>
             <div className="flex gap-4 flex-wrap">
-                {data?.content.map(({ _id,type, link, title}, index) => <Card
+                {data?.content.map(({ _id,type, link, title}, index) => <ShareCard
                     key={index} 
                     type={type} 
                     link={link} 
