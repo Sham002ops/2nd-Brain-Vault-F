@@ -6,7 +6,7 @@ import ExpiredImg from '../../assets/LinkExpired.png'
 import Button from "../UI/Button";
 import ViewPost from "../UI/ViewPost";
 import { ShareCard } from "../UI/ShareCard";
-import { Processing } from "../../icons/processing";
+import { Processing } from "../../icons/Processing";
 interface ShareContent  {
     username: string;
     content: {
