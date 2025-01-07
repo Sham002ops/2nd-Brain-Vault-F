@@ -1,14 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../Config";
-import SessionExpired from "../pages/SessionExpired";
-import { useNavigate } from "react-router-dom";
 
 export function useContent() {
     const [contents, setContents] = useState([]);
-    const navigate = useNavigate();
-    
-    const [isSessionExpired, setIsSessionExpired] = useState(false);
+
     
 
    async function refresh() {
@@ -22,12 +18,9 @@ export function useContent() {
                 
         } catch (error) {
             if (axios.isAxiosError(error) && error.response && error.response.data.message === "Token Expired") {
-                setIsSessionExpired(true);
+                
                 window.localStorage.clear();
-                navigate("/timeout");
-            } 
-            if (isSessionExpired) {
-                return <SessionExpired />;
+                
             }else {
                 console.error("Error fetching content:", error);
             }
@@ -75,7 +68,7 @@ useEffect(() => {
     return () => {
         clearInterval(interval);
     }
-// eslint-disable-next-line react-hooks/exhaustive-deps
+
 }, []);
 
 

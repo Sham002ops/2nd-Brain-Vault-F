@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { SharePage } from "./components/pages/SharePage"
 import ContentPage from "./components/pages/ContentPage"
 import { useState } from "react"
-import SessionExpired from "./components/pages/SessionExpired"
 
 
 function App() {
@@ -26,7 +25,6 @@ function App() {
         <Route path="/content/instagram" element={<ContentPage searchQuery={searchQuery} setSearchQuery={setSearchQuery}  type="instagram" />} />
         <Route path="/content/facebook" element={<ContentPage searchQuery={searchQuery} setSearchQuery={setSearchQuery}  type="facebook" />} />
         <Route path="/content/pinterest" element={<ContentPage searchQuery={searchQuery} setSearchQuery={setSearchQuery}  type="pinterest" />} />
-        <Route path="/timeout" element={<SessionExpired/>}/>
       </Routes>
   
   </BrowserRouter>
