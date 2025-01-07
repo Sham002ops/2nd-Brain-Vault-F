@@ -63,8 +63,11 @@ async function signin (){
 
     <div className=' absolute bg-gray-800 h-52 w-52 rounded-full -top-4 right-96 animate-float '> </div>
 
-    <h2 className=' absolute text-gray-800 font-bold top-52   drop-shadow-lg shadow-purple-700 left-44 text-5xl font-mono 
-    animate-typing'>Step Into a Smarter You.!</h2>
+    <h2 className=' absolute text-gray-800 font-bold top-40   drop-shadow-lg shadow-purple-700 left-44 text-5xl font-mono 
+    animate-typing'>Your thoughts, captured</h2>
+   
+    <h2 className=' absolute text-gray-800 font-bold top-60   drop-shadow-lg shadow-purple-700 left-44 text-5xl font-mono 
+    animate-typing'>Always within reach!</h2>
 
    
 
