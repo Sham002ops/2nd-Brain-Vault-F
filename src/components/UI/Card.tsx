@@ -20,7 +20,7 @@ import Button from "./Button";
     description?: string;
 }
 
-export const Card = ({_id, onDelete,title, link,tags, type,onOpen}: CardProps & { onOpen: ()=> void}) =>{
+const Card = ({_id, onDelete,title, link,tags, type,onOpen}: CardProps & { onOpen: ()=> void}) =>{
     
     const SmartIcon = () => {
         if (type === "youtube") return <YoutubeIcon size="lg" />;
@@ -152,3 +152,5 @@ export const Card = ({_id, onDelete,title, link,tags, type,onOpen}: CardProps & 
         </div>
     )
 } 
+
+export default Card

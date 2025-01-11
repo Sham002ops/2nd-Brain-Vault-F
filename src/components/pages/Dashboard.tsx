@@ -1,15 +1,15 @@
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '../UI/Button'
-import { Card } from '../UI/Card'
 import { PlusIcon } from '../../icons/plusIcon'
 import Sidebar from '../../components/UI/Sidebar'
 import { useContent } from '../hooks/useContent'
 import Header from '../Header'
 import SearchBar from '../SearchBar'
 import CreateContent from '../UI/CreateContent'
-import ViewPost from '../UI/ViewPost'
 
+const ViewPost = React.lazy(() => import('../UI/ViewPost'));
+const Card = React.lazy(() => import('../UI/Card'))
 
 export function Dashboard({searchQuery, setSearchQuery}) {
       const [modalOpen, setModalOpen]= useState(false);

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import  { useEffect, useState } from 'react'
 // import { useContent } from '../hooks/useContent';
-import { Card } from '../UI/Card';
+import  Card  from '../UI/Card';
 import { BACKEND_URL } from '../../Config';
 import Sidebar from '../UI/Sidebar';
 import Button from '../UI/Button';
