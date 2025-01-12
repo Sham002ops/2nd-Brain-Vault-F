@@ -54,7 +54,7 @@ export const ViewCard = ({_id, onDelete,title, link,tags, type, description}: Ca
                  <div className=" w-full rounded-lg overflow-hidden scrollbar-hide ">
                    {type === "youtube" && <div className=" rounded-md p-1 mt-8">
                     <div className=" bg-gray-300 -mt-8 p-1 rounded-md ">
-                    <iframe className="" width={900} height={500} src={link.replace("watch", "embed").replace("?v=", "/").split("&t=")[0]} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                    <iframe className="" width={900} height={500} src={link.replace("watch", "embed").replace("shorts", "embed").replace("?v=", "/").split("&t=")[0]} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
                     </div>
                     <div>
                     <Button  onClick={() => setRotateIg(!rotateIg)} size='xs' variant='primary' text='Short'/>
@@ -156,7 +156,7 @@ export const ViewCard = ({_id, onDelete,title, link,tags, type, description}: Ca
                  <div className=" w-full rounded-lg overflow-auto hide-scrollbar ">
                    {type === "youtube" && <div className=" ">
                     <div className="rounded-md p-1 mt-8 bg-gray-300">
-                    <iframe className="" src={link.replace("watch", "embed").replace("?v=", "/").split("&t=")[0]} title="YouTube video player" width={500} height={300} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                    <iframe className="" src={link.replace("watch", "embed").replace("shorts", "embed").replace("?v=", "/").split("&t=")[0]} title="YouTube video player" width={500} height={300} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
                     </div>
                     <div className=" pt-2">
                     <Button  onClick={() => setRotateIg(!rotateIg)} size='md' variant='primary' text='Full'/>

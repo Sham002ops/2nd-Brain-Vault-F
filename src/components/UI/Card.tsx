@@ -74,7 +74,7 @@ const Card = ({_id, onDelete,title, link,tags, type,onOpen}: CardProps & { onOpe
                  </div>
                 
                 <div className="pt-4 w-full rounded-lg overflow-hidden ">
-                   {type === "youtube" &&  <iframe className="w-full -mt-4 h-36" src={link.replace("watch", "embed").replace("?v=", "/").split("&t=")[0]} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>}
+                   {type === "youtube" &&  <iframe className="w-full -mt-4 h-36" src={link.replace("watch", "embed").replace("shorts", "embed").replace("?v=", "/").split("&t=")[0]} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>}
 
                    {type === "twitter" && <div className="  w-72 -ml-4 -mt-8 mr-2  ">
                         <iframe

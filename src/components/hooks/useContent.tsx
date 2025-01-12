@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { BACKEND_URL } from "../../Config";
 
 export function useContent() {
@@ -7,25 +7,29 @@ export function useContent() {
 
     
 
-   async function refresh() {
-        try {
-            const response = await axios.get(`${BACKEND_URL}/api/v1/content`, {
-                    headers: {
-                        "Authorization": localStorage.getItem("token"),
-                    },
-                })
-                setContents(response.data.content);
-                
-        } catch (error) {
-            if (axios.isAxiosError(error) && error.response && error.response.data.message === "Token Expired") {
-                
-                window.localStorage.clear();
-                
-            }else {
-                console.error("Error fetching content:", error);
+
+    const refresh = useCallback( async () =>
+        {
+            try {
+                const response = await axios.get(`${BACKEND_URL}/api/v1/content`, {
+                        headers: {
+                            "Authorization": localStorage.getItem("token"),
+                        },
+                    })
+                    setContents(response.data.content);
+                    
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response && error.response.data.message === "Token Expired") {
+                    
+                    window.localStorage.clear();
+                    
+                }else {
+                    console.error("Error fetching content:", error);
+                }
             }
-        }
-    }
+        }, [])
+
+   
 
     
 
@@ -69,11 +73,13 @@ useEffect(() => {
         clearInterval(interval);
     }
 
-}, []);
+}, [refresh]);
+
+const memoizedContents = useMemo(() => contents, [contents]);
 
 
 
-    return { contents, refresh };
+    return { contents: memoizedContents, refresh };
 }
 
     
