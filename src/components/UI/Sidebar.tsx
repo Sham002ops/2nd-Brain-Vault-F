@@ -11,6 +11,7 @@ import FacebookIcon from '../../icons/facebookIcon'
 import Button from './Button'
 import LogoutIcon from '../../icons/LogoutIcon'
 import PinterestIcon from '../../icons/PinterestIcon'
+import DocIcon from '../../icons/DocIcon'
 
 
 const Sidebar = () => {
@@ -63,7 +64,12 @@ const Sidebar = () => {
                 <SidebarItems text='Pinterest' icon={<PinterestIcon className=' w-6 h-6'/>}/>
                 </Link>
               </div>
-              <div className=' pt-60 pl-12'>
+              <div className='p-2'>
+                <Link to="/content/doc">
+                <SidebarItems text='Document' icon={<DocIcon size='lg'/>}/>
+                </Link>
+              </div>
+              <div className=' pt-48 pl-12'>
                 <Button variant="primary" size="md" text="Logout" transition='4' onClick={handleLogout} endIcon={<LogoutIcon width={20} height={20} fill=""/>}></Button>
               </div>
         </div>

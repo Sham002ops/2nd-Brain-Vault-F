@@ -25,6 +25,7 @@ function App() {
         <Route path="/content/instagram" element={<ContentPage searchQuery={searchQuery} setSearchQuery={setSearchQuery}  type="instagram" />} />
         <Route path="/content/facebook" element={<ContentPage searchQuery={searchQuery} setSearchQuery={setSearchQuery}  type="facebook" />} />
         <Route path="/content/pinterest" element={<ContentPage searchQuery={searchQuery} setSearchQuery={setSearchQuery}  type="pinterest" />} />
+        <Route path="/content/doc" element={<ContentPage searchQuery={searchQuery} setSearchQuery={setSearchQuery}  type="doc" />} />
       </Routes>
   
   </BrowserRouter>

@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useContent } from '../hooks/useContent';
 import SearchBar from '../SearchBar';
 import ViewPost from '../UI/ViewPost';
+import { Processing } from '../../icons/Processing';
 
 
 interface Content {
@@ -17,9 +18,10 @@ interface Content {
     tags: string[];
     link: string;
     title: string;
+    description?: string;
 }
 
-const ContentPage = ({type, searchQuery, setSearchQuery}: {type: "twitter" | "youtube" | "instagram" | "facebook" | "pinterest", searchQuery: string, setSearchQuery: (query: string) => void}) => {
+const ContentPage = ({type, searchQuery, setSearchQuery}: {type: "twitter" | "youtube" | "instagram" | "facebook" | "pinterest" | "doc", description?: string, searchQuery: string, setSearchQuery: (query: string) => void}) => {
     const [content, setContent] = useState<Content[]>([]);
     const [loading, setLoading ] = useState(true);
     const {contents, refresh} = useContent();
@@ -66,7 +68,9 @@ const ContentPage = ({type, searchQuery, setSearchQuery}: {type: "twitter" | "yo
 
 
   if(loading){
-     return <div>Loading...</div>;
+     return  <div className=" flex pt-80 items-center  justify-center">
+                <Processing/>
+               </div>;
   }
 
   const contentHeaders = {
@@ -75,6 +79,7 @@ const ContentPage = ({type, searchQuery, setSearchQuery}: {type: "twitter" | "yo
     instagram: "Instagram Content",
     facebook: " Facebook Content",
     pinterest: "Pinterest Content",
+    doc: "Doc Content",
   };
 
   return (
@@ -99,13 +104,14 @@ const ContentPage = ({type, searchQuery, setSearchQuery}: {type: "twitter" | "yo
               content.tags.some((tag) =>
                 tag.includes(searchQuery.toLowerCase())
               )
-            ).map(({_id,type,tags, link, title}) => <Card 
+            ).map(({_id,type,tags, link, title, description}) => <Card 
           key={_id}
           _id={_id}
           tags={tags}
-          type={type as "twitter" | "youtube" | "instagram" | "facebook" | "pinterest"}
+          type={type as "twitter" | "youtube" | "instagram" | "facebook" | "pinterest" | "doc"}
           link={link}
           title={title}
+          description={type === "doc" ? description : undefined}
           onOpen={() => handleOpen(_id)}
           onDelete={handleDelete}
           />
