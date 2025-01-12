@@ -15,6 +15,7 @@ enum ContentType {
     Instagram ="instagram",
     Facebook = "facebook",
     Pinterest = "pinterest",
+    Doc = "doc",
     
 }
 
@@ -163,6 +164,10 @@ const CreateContent = ({open, onClose} ) => {
                         <Button size='md' text="Pinterest" variant={type === ContentType.Pinterest ?
                         "primary" : "secondary"} onClick={() => {
                             setType(ContentType.Pinterest)
+                        }}/>
+                        <Button size='md' text="Doc" variant={type === ContentType.Doc ?
+                        "primary" : "secondary"} onClick={() => {
+                            setType(ContentType.Doc)
                         }}/>
                     </div> 
                </div>

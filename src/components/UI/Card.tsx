@@ -14,13 +14,13 @@ import Button from "./Button";
     title: string;
     tags: string[];
     link: string;
-    type: "twitter" | "youtube"| "instagram" | "facebook" | "pinterest";
+    type: "twitter" | "youtube"| "instagram" | "facebook" | "pinterest" | "doc";
     onDelete: (id: string) => void;
     onOpen: () => void;
     description?: string;
 }
 
-const Card = ({_id, onDelete,title, link,tags, type,onOpen}: CardProps & { onOpen: ()=> void}) =>{
+const Card = ({_id, onDelete,title, link,tags, type, description,onOpen}: CardProps & { onOpen: ()=> void}) =>{
     
     const SmartIcon = () => {
         if (type === "youtube") return <YoutubeIcon size="lg" />;
@@ -28,10 +28,11 @@ const Card = ({_id, onDelete,title, link,tags, type,onOpen}: CardProps & { onOpe
         if (type === "instagram") return <InstaIcon className=' w-6 h-6' />;
         if (type === "facebook") return <FacebookIcon />;
         if (type === "pinterest") return <PinterestIcon className=' w-6 h-6'/>;
+        if (type === "doc") return <DocIcon size="md"/>;
         return <DocIcon size="md" />;
       };
     
-    
+    //for pintrest embed
       const parts = link.split('/');
       const pinId = parts[parts.length - 2];
       
@@ -130,6 +131,24 @@ const Card = ({_id, onDelete,title, link,tags, type,onOpen}: CardProps & { onOpe
 
 
                         }
+                {type === "doc" && (
+                    <div className="pt-1">
+                    <h1 className="text-gray-800 text-lg font-bold mb-2">{title}</h1>
+                    <ul className="list-disc pl-5 text-gray-700 mb-4">
+                    {description?.split("\n").map((point, index) => (
+                        <li key={index}>{point}</li>
+                    ))}
+            </ul>
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline"
+            >
+              Learn More
+            </a>
+          </div> 
+                )}
 
                 </div> 
                     <h1 className="text-gray-800 text-sm mt-1 font-bold">Tags</h1>

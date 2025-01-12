@@ -16,7 +16,7 @@ export function Dashboard({searchQuery, setSearchQuery}) {
       const [viewmodalOpen, setViewModalOpen]= useState(false);
       const [selectedContentId, setSelectedContentId] = useState<string | null>(null);
 
-      const {contents = [], refresh }: { contents: Array<{ _id: string, type: "twitter" | "youtube" | "instagram" | "facebook" | "pinterest", tags: string[], link: string, title: string }>, refresh: () => void } = useContent();
+      const {contents = [], refresh }: { contents: Array<{ _id: string, type: "twitter" | "youtube" | "instagram" | "facebook" | "pinterest" | "doc", tags: string[], link: string, title: string, description: string }>, refresh: () => void } = useContent();
       
       
       const handleDelete = (id: string) => {
@@ -74,13 +74,14 @@ export function Dashboard({searchQuery, setSearchQuery}) {
                 content.tags.some((tag) =>
                   tag.includes(searchQuery.toLowerCase())
                 )
-              ).map(({_id,type,tags, link, title}) => <Card 
+              ).map(({_id,type,tags, link, title, description}) => <Card 
                 key={_id}
                 _id={_id}
                 tags={tags}
                 type={type}
                 link={link}
                 title={title}
+                description={type === "doc" ? description : undefined}
                 onOpen={() => handleOpen(_id)}
                 onDelete={handleDelete}
             />

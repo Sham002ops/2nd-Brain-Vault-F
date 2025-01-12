@@ -13,7 +13,7 @@ import Button from "./Button";
     tags: string[];
     link: string;
     description: string;
-    type: "twitter" | "youtube"| "instagram" | "facebook" | "pinterest";
+    type: "twitter" | "youtube"| "instagram" | "facebook" | "pinterest" | "doc";
     onDelete: (id: string) => void;
     onOpen: () => void;
 }
@@ -224,14 +224,24 @@ export const ViewCard = ({_id, onDelete,title, link,tags, type, description}: Ca
                         </button>
                         </div>
 
-                    <div className=" pl-4 text-xl font-bold">
+                    <div className=" pl-4 text-xl text-gray-800 font-bold">
                        
                         {title}
 
                     </div>
-                    <div className=" ml-4 mt-2 border-2 min-h-min w-96 border-gray-300  p-2 rounded-sm">
+                    <div className=" ml-4 mt-2 border-2 min-h-min w-96 border-purple-700  p-2 rounded-md">
                         <h4 className=" font-bold">Description :</h4>
                         {description}
+                    </div>
+                    <div className=" pl-4 p-2">
+                    <a
+                            href={link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 underline"
+                            >
+                            Learn More
+                            </a>
                     </div>
                         
                     <div className=" justify-start pl-4 mt-6 ">
