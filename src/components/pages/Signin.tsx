@@ -46,7 +46,7 @@ async function signin (){
         
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.data?.message) {
-        alert(` Error: ${error.response.data.error.message}`);
+        alert(`Passward Don't Match`);
       } else {
         alert("An unexpected error occurred.");
       }
