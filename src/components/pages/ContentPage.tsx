@@ -82,6 +82,11 @@ const ContentPage = ({type, searchQuery, setSearchQuery}: {type: "twitter" | "yo
     doc: "Doc Content",
   };
 
+
+  const handleNavigate = ()=>{
+    refresh()
+    navigate('/dashboard')
+  }
   return (
 
     <div className=' h-40 bg-gray-300 '>
@@ -128,9 +133,7 @@ const ContentPage = ({type, searchQuery, setSearchQuery}: {type: "twitter" | "yo
       </div>
       <div className='bg-gray-300  h-24  relative ml-72 pt-10 '>
       <div className=" flex justify-center items-center ">
-                    <Button onClick={()=>{
-                                    navigate('/dashboard')
-                        }} size='sm'  variant='primary'text="Go to Dashboard"/>
+                    <Button onClick={handleNavigate} size='sm'  variant='primary'text="Go to Dashboard"/>
             </div>
            
       </div>
