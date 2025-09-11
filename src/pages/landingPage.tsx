@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import improved from '../assets/Improved.mp4'
@@ -15,6 +15,7 @@ import {
 } from '@heroicons/react/24/outline';
 import BrainIcon from '../icons/BrainIcon';
 import { useNavigate } from 'react-router-dom';
+import Demoview from '../components/UI/DemoVideo';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -28,7 +29,7 @@ const LandingPage: React.FC = () => {
   const featureCardsRef = useRef<HTMLDivElement[]>([]);
   const navRef = useRef<HTMLElement>(null);
   const navigate = useNavigate();
-
+  const [modalOpen, setModalOpen] = useState(false);
   const useCases = [
     {
       icon: <BookmarkIcon className="w-8 h-8" />,
@@ -230,7 +231,7 @@ const LandingPage: React.FC = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="p-2 rounded-xl bg-violet-600">
+              <div className="p-2 rounded-xl bg-neutral-950">
                 <BrainIcon className="w-8 h-8 text-white" />
               </div>
               <span className="text-2xl font-bold text-white">2nd Brain Vault</span>
@@ -309,7 +310,9 @@ const LandingPage: React.FC = () => {
               <span>Start Building Your Vault</span>
               <ArrowRightIcon className="w-5 h-5" />
             </button>
-            <button className="px-10 py-4 border-2 border-violet-500 text-violet-400 rounded-full text-lg font-semibold hover:bg-violet-500/10 hover:text-violet-300 transition-all duration-300">
+            <button 
+              onClick={() => setModalOpen(true)}
+              className="px-10 py-4 border-2 border-violet-500 text-violet-400 rounded-full text-lg font-semibold hover:bg-violet-500/10 hover:text-violet-300 transition-all duration-300">
               Watch Demo
             </button>
           </div>
@@ -354,7 +357,12 @@ const LandingPage: React.FC = () => {
           ))}
         </div>
       </section>
-
+          <Demoview
+        open={modalOpen}
+        onClose={() => {
+            setModalOpen(false);
+          }}
+          />
       {/* Features Section */}
       <section id="features" className="container mx-auto px-6 py-24">
         <div className="text-center mb-16">

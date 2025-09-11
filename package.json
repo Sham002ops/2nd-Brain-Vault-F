@@ -20,6 +20,8 @@
     "react-dom": "^18.3.1",
     "react-embed": "^3.7.0",
     "react-router-dom": "^7.0.2",
+    "react-tweet": "^3.2.2",
+    "react-twitter-embed": "^4.0.4",
     "reddit-embed": "^1.1.2",
     "tailwind-scrollbar-hide": "^2.0.0"
   },

@@ -7,6 +7,8 @@ import YoutubeIcon from "../../icons/YoutubeIcon";
 import DeleteContent from "./DeleteContent";
 import FacebookIcon from "../../icons/facebookIcon";
 import PinterestIcon from "../../icons/PinterestIcon";
+import { Tweet } from 'react-tweet'
+
 
 export interface CardProps {
   _id: string;
@@ -104,21 +106,13 @@ const Card = ({ _id, onDelete, title, link, tags, type, description, onOpen }: C
             )}
 
             {type === "twitter" && (
-              <div className="w-full">
-                <iframe
-                  className="w-full"
-                  src={`https://twitframe.com/show?url=${link.replace("x.com", "twitter.com")}`}
-                  height={300}
-                  // Raise height progressively on larger screens
-                  // sm: ~330, md+: ~360
-                  // Using inline style for clarity:
-                  style={{ height: '330px' }}
-                  frameBorder={0}
-                  scrolling="no"
-                  allowTransparency
-                />
-              </div>
-            )}
+                <div className="w-full">
+                  <Tweet 
+                    id={link.split('/').pop() || ""} // Ensure id is always a string
+                    apiUrl={undefined} // Provide apiUrl as undefined to satisfy type
+                  />
+                </div>
+              )}
 
             {type === "instagram" && (
               <div className="w-full">
