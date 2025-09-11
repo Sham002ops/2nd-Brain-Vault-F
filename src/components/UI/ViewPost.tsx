@@ -19,7 +19,7 @@ const ViewPost = ({ open, onClose, selectedContentId }: { open: boolean, onClose
                 </div>
                 <div className=' h-screen w-screen  fixed top-0 left-0 flex justify-center z-50 '>
                 <div className='flex flex-col  justify-center '>
-               <span className='bg-white border  flex overflow-auto scrollbar-hide border-purple-700 shadow-md shadow-purple-700  p-4 w-full rounded-md'>
+               <span className='bg-neutral-900/95  border  flex overflow-auto scrollbar-hide border-purple-700 shadow-md shadow-purple-700  p-4 w-full rounded-md'>
               {cardContent && <ViewCard 
                             key={cardContent._id}
                            _id={cardContent._id}

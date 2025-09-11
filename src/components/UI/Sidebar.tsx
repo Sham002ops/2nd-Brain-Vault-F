@@ -1,10 +1,7 @@
-
 import { SidebarItems } from './SidebarItem'
 import { TwitterIcon } from '../../icons/TwitterIcon'
-// import YoutubeIcon from '../../icons/YoutubeIcon'
 import BrainIcon from '../../icons/BrainIcon'
 import { Link, useNavigate } from 'react-router-dom'
-// import ContentPage from '../pages/ContentPage'
 import YoutubeIcon from '../../icons/YoutubeIcon'
 import InstaIcon from '../../icons/InstaIcon'
 import FacebookIcon from '../../icons/facebookIcon'
@@ -12,70 +9,115 @@ import Button from './Button'
 import LogoutIcon from '../../icons/LogoutIcon'
 import PinterestIcon from '../../icons/PinterestIcon'
 import DocIcon from '../../icons/DocIcon'
+import { HomeIcon } from '@heroicons/react/24/outline'
 
+// Sidebar.tsx
+type SidebarProps = {
+  open?: boolean;          // mobile/tablet drawer open
+  onClose?: () => void;    // close handler for overlay click or ESC
+};
 
-const Sidebar = () => {
-
-
-
+const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    
-     
-          window.localStorage.clear();
-          navigate("/signin");
-     
-  
-      return null;
+    window.localStorage.clear();
+    navigate("/signin");
+    return null;
   };
-   
-  return <div className='h-screen bg-white border-r w-72 fixed border-2 left-0 top-0 pl-4'>
-        <h1 className='flex text-3xl items-center pt-3 font-bold text-gray-700'>
-            <div className='text-purple-700 pr-2'>
-            <BrainIcon width="50" height="50" className="custom-class " />
-            </div>
-            2nd Brain
-            
-        </h1>
-        <div className=' pt-8 pl-4 gap-4 '>
-              <div className='p-2'>
-                <Link to="/content/twitter">
-                <SidebarItems  text='Twitter' icon={<TwitterIcon size='lg'/>}/>
-                </Link>
-              </div>
-              <div className='p-2'>
-                <Link to="/content/youtube">
-                <SidebarItems text='Youtube' icon={<YoutubeIcon size='lg'/>}/>
-                </Link>
-              </div>
-              <div className='p-2'>
-                <Link to="/content/instagram">
-                <SidebarItems text='Instagram' icon={<InstaIcon className=' w-6 h-6'/>}/>
-                </Link>
-              </div>
-              <div className='p-2'>
-                <Link to="/content/facebook">
-                <SidebarItems text='Facebook' icon={<FacebookIcon className=' w-6 h-6'/>}/>
-                </Link>
-              </div>
-              <div className='p-2'>
-                <Link to="/content/pinterest">
-                <SidebarItems text='Pinterest' icon={<PinterestIcon className=' w-6 h-6'/>}/>
-                </Link>
-              </div>
-              <div className='p-2'>
-                <Link to="/content/doc">
-                <SidebarItems text='Document' icon={<DocIcon size='lg'/>}/>
-                </Link>
-              </div>
-              <div className=' pt-48 pl-12'>
-                <Button variant="primary" size="md" text="Logout" transition='4' onClick={handleLogout} endIcon={<LogoutIcon width={20} height={20} fill=""/>}></Button>
-              </div>
-        </div>
-        
-        
-  </div>
-}
 
-export default Sidebar
+  return (
+    <>
+      {/* Mobile/Tablet overlay */}
+      <div
+        onClick={onClose}
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden transition-opacity ${
+          open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      />
+
+      {/* Drawer (mobile/tablet) and fixed (desktop) */}
+      <aside
+        className={`
+          fixed top-0 left-0 h-screen w-72 bg-neutral-950 text-white border-r border-violet-700/40 pl-4 z-50
+          transition-transform duration-300
+          ${open ? 'translate-x-0' : '-translate-x-full'}
+          lg:translate-x-0  /* desktop always visible */
+          lg:z-30
+        `}
+        role="navigation"
+        aria-label="Sidebar"
+      >
+        {/* Close button visible only on mobile/tablet */}
+        <button
+          onClick={onClose}
+          className="lg:hidden absolute right-3 top-3 text-gray-300 hover:text-white"
+          aria-label="Close menu"
+        >
+          ✕
+        </button>
+
+        {/* Brand */}
+        <h1 className="flex items-center gap-2 pt-4 text-2xl font-extrabold tracking-tight">
+          <span className="text-violet-400">
+            <BrainIcon width="42" height="42" className="custom-class" />
+          </span>
+          <span>2nd Brain</span>
+        </h1>
+
+        {/* Nav */}
+        <nav className="pt-8 pl-2 pr-3 space-y-1">
+          <div className="p-2 rounded-lg hover:bg-white/5 transition">
+            <Link to="/dashboard" onClick={onClose}>
+              <SidebarItems text="dashboard" icon={<HomeIcon className="w-6 h-6" />} />
+            </Link>
+          </div>
+          <div className="p-2 rounded-lg hover:bg-white/5 transition">
+            <Link to="/content/twitter" onClick={onClose}>
+              <SidebarItems text="Twitter" icon={<TwitterIcon size="lg" />} />
+            </Link>
+          </div>
+          <div className="p-2 rounded-lg hover:bg-white/5 transition">
+            <Link to="/content/youtube" onClick={onClose}>
+              <SidebarItems text="Youtube" icon={<YoutubeIcon size="lg" />} />
+            </Link>
+          </div>
+          <div className="p-2 rounded-lg hover:bg-white/5 transition">
+            <Link to="/content/instagram" onClick={onClose}>
+              <SidebarItems text="Instagram" icon={<InstaIcon className="w-6 h-6" />} />
+            </Link>
+          </div>
+          <div className="p-2 rounded-lg hover:bg-white/5 transition">
+            <Link to="/content/facebook" onClick={onClose}>
+              <SidebarItems text="Facebook" icon={<FacebookIcon className="w-6 h-6" />} />
+            </Link>
+          </div>
+          <div className="p-2 rounded-lg hover:bg-white/5 transition">
+            <Link to="/content/pinterest" onClick={onClose}>
+              <SidebarItems text="Pinterest" icon={<PinterestIcon className="w-6 h-6" />} />
+            </Link>
+          </div>
+          <div className="p-2 rounded-lg hover:bg-white/5 transition">
+            <Link to="/content/doc" onClick={onClose}>
+              <SidebarItems text="Links" icon={<DocIcon size="lg" />} />
+            </Link>
+          </div>
+
+          {/* Logout pinned near bottom on desktop, regular flow on mobile */}
+          <div className="lg:mt-40 pl-8">
+            <Button
+              variant="primary"
+              size="md"
+              text="Logout"
+              transition="4"
+              onClick={handleLogout}
+              endIcon={<LogoutIcon width={20} height={20} fill="" />}
+            />
+          </div>
+        </nav>
+      </aside>
+    </>
+  );
+};
+
+export default Sidebar;

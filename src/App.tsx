@@ -1,12 +1,13 @@
 
-import { Dashboard } from "./components/pages/Dashboard"
-import Signin from "./components/pages/Signin"
-import Signup from "./components/pages/Signup"
+import { Dashboard } from "./pages/Dashboard"
+import Signin from "./pages/Signin"
+import Signup from "./pages/Signup"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-// import YoutubePage from "./components/pages/YoutubePage"
-import { SharePage } from "./components/pages/SharePage"
-import ContentPage from "./components/pages/ContentPage"
+// import YoutubePage from "./pages/YoutubePage"
+import { SharePage } from "./pages/SharePage"
+import ContentPage from "./pages/ContentPage"
 import { useState } from "react"
+import LandingPage from "./pages/landingPage"
 
 
 function App() {
@@ -15,9 +16,10 @@ function App() {
      
   return <BrowserRouter>
       <Routes>
-        <Route path="/" element={isLoggedIn == "true" ? <Dashboard searchQuery={searchQuery} setSearchQuery={setSearchQuery} />: <Signup/>}/>
+        <Route path="/" element={isLoggedIn == "true" ? <Dashboard searchQuery={searchQuery} setSearchQuery={setSearchQuery} />: <LandingPage/>}/>
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/signin" element={<Signin/>}/>
+        <Route path="/landing" element={<LandingPage/>}/>
         <Route path="/dashboard" element={<Dashboard searchQuery={searchQuery} setSearchQuery={setSearchQuery} />}/>
         <Route path="/dashboard/share/:shareLink" element={<SharePage/>}/>
         <Route path="/content/youtube" element={<ContentPage searchQuery={searchQuery} setSearchQuery={setSearchQuery}  type="youtube" />} />

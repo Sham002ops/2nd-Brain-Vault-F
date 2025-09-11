@@ -1,200 +1,328 @@
-import  { useRef, useState } from 'react'
-import CloseIcon from '../../icons/CloseIcon'
-import Button from './Button'
-import { Input } from './InputBox'
-import axios from 'axios'
-import { BACKEND_URL } from '../../Config'
-import { useContent } from '../hooks/useContent'
-import TwitterImg  from '../../assets/twitterSearch.png'
-import  YtImg from '../../assets/ytSearch.png'
-import { ProcessingIcon } from './ProcessingIcon'
+import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import CloseIcon from '../../icons/CloseIcon';
+import { BACKEND_URL } from '../../Config';
+import { useContent } from '../hooks/useContent';
+import TwitterImg from '../../assets/twitterSearch.png';
+import YtImg from '../../assets/ytSearch.png';
+
+gsap.registerPlugin(ScrollTrigger);
 
 enum ContentType {
-    Youtube = "youtube",
-    Twitter = "twitter",
-    Instagram ="instagram",
-    Facebook = "facebook",
-    Pinterest = "pinterest",
-    Doc = "doc",
-    
+  Youtube = 'youtube',
+  Twitter = 'twitter',
+  Instagram = 'instagram',
+  Facebook = 'facebook',
+  Pinterest = 'pinterest',
+  Doc = 'doc',
 }
 
-const CreateContent = ({open, onClose} ) => {
-    const titleRef = useRef<HTMLInputElement>(null);
-    const linkRef = useRef<HTMLInputElement>(null);
-    const descriptionRef = useRef<HTMLTextAreaElement>(null);
-    const btnRef = useRef<HTMLButtonElement>(null);
-    const [type, setType] = useState(ContentType.Youtube);
-    const [loading, setLoading] = useState(false);
-    const [tags, setTags] = useState<string[]>([]); 
-    const [tagInput, setTagInput] = useState<string>("");
+type Props = {
+  open: boolean;
+  onClose: () => void;
+};
 
-    const {refresh} = useContent()
+const CreateContent: React.FC<Props> = ({ open, onClose }) => {
+  const titleRef = useRef<HTMLInputElement>(null);
+  const linkRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const tagInputRef = useRef<HTMLInputElement>(null);
+  const submitBtnRef = useRef<HTMLButtonElement>(null);
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, nextRef: React.RefObject<HTMLInputElement> | React.RefObject<HTMLButtonElement> | React.RefObject<HTMLTextAreaElement>) => {
-        if (e.key === "Enter") {
-          nextRef.current?.focus();
-          nextRef.current?.click();
-        }
-      };
+  const modalCardRef = useRef<HTMLDivElement>(null);
 
-    const addTag = () => {
-        if (tagInput.trim() && !tags.includes(tagInput)) {
-            setTags([...tags, tagInput.trim()]);
-            setTagInput(""); 
-        }
+  const [type, setType] = useState<ContentType>(ContentType.Youtube);
+  const [loading, setLoading] = useState(false);
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState<string>('');
+
+  const { refresh } = useContent();
+
+  useEffect(() => {
+    if (!open) return;
+
+    // Lock background scroll on open
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    // Animations
+    gsap.set('.cc-overlay', { opacity: 0 });
+    gsap.set(modalCardRef.current, { opacity: 0, y: 24, scale: 0.98 });
+    gsap.to('.cc-overlay', { opacity: 1, duration: 0.2, ease: 'power1.out' });
+    gsap.to(modalCardRef.current, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'power2.out', delay: 0.05 });
+    gsap.to('.cc-float', {
+      y: '+=16',
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      duration: 3,
+      stagger: 0.4,
+    });
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
     };
+  }, [open]);
 
-    const removeTag = (tag: string) => {
-        setTags(tags.filter(t => t !== tag));
-    };
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    nextRef:
+      | React.RefObject<HTMLInputElement>
+      | React.RefObject<HTMLButtonElement>
+      | React.RefObject<HTMLTextAreaElement>
+  ) => {
+    if (e.key === 'Enter') {
+      nextRef.current?.focus();
+      nextRef.current?.click?.();
+    }
+  };
 
+  const addTag = () => {
+    const value = tagInput.trim().toLowerCase();
+    if (value && !tags.includes(value)) {
+      setTags((prev) => [...prev, value]);
+      setTagInput('');
+      tagInputRef.current?.focus();
+    }
+  };
 
-  async  function addContent(){
+  const removeTag = (tag: string) => {
+    setTags((prev) => prev.filter((t) => t !== tag));
+  };
+
+  async function addContent() {
     if (loading) return;
     setLoading(true);
-        const title = titleRef.current?.value;
-        const description = descriptionRef.current?.value;
-        const link = linkRef.current?.value;
+    const title = titleRef.current?.value?.trim();
+    const description = descriptionRef.current?.value?.trim();
+    const link = linkRef.current?.value?.trim();
 
-
-        await axios.post(`${BACKEND_URL}/api/v1/content`, {
-            link,
-            title,
-            description,
-            type: type,
-            tags
-            
-           
-        }, {
-            headers: {
-                "Authorization" : localStorage.getItem("token")
-            }
-        })
-
-        refresh()
-        onClose();
-        setLoading(false);
+    if (!title || !link) {
+      alert('Please enter both Title and Link.');
+      setLoading(false);
+      return;
     }
 
+    try {
+      await axios.post(
+        `${BACKEND_URL}/api/v1/content`,
+        { link, title, description, type, tags },
+        { headers: { Authorization: localStorage.getItem('token') || '' } }
+      );
 
-    
-
-
-  return <div>
-        {open && <div>
-                <div className=' backdrop-blur bg-white/10  h-screen w-screen  fixed top-0 left-0 flex justify-center z-50'>   
-                </div>
-                <div className=' h-screen w-screen  fixed top-0 left-0 flex justify-center z-50 '>
-                <div className='flex flex-col  justify-center '>
-               <span className='bg-white border  border-purple-700 shadow-md shadow-purple-700  p-4 w-full rounded-md'>
-               <div className='flex justify-end pb-2'>
-                    <div className='cursor-pointer' onClick={onClose}>
-                        <CloseIcon size='lg'/>
-                    </div>    
-               </div>
-               <div className=' flex gap-4'>
-               <div className=''>
-                <div>
-               <h4 className='text-lg p-1 font-bold  text-gray-800'>Add Title and Link</h4>
-               <div className='mr-2 ml-2  ' >
-               <div className='flex justify-center pb-2'>
-                <Input size='md' reference={titleRef} placeholder={"Title"}  onKeyDown={(e) => handleKeyDown(e, linkRef)}/></div> 
-               <div className='flex justify-center'>
-                <Input reference={linkRef} size='md' placeholder={"Link"}  onKeyDown={(e) => handleKeyDown(e, descriptionRef)}/></div> 
-               </div>
-               <div className='flex justify-center pt-2'>
-                <textarea ref={descriptionRef} className=' border-purple-700 border-2 outline-none w-64 h-16 rounded-md' placeholder={"Description"}/></div> 
-               </div>
-              
-               <div className="flex flex-col  mt-4">
-                                        <h1 className="text-gray-800 text-lg font-bold">Tags</h1>
-                                        <div className="flex gap-2 mt-2 pl-14">
-                                            <input
-                                                type="text"
-                                                value={tagInput}
-                                                onChange={(e) => setTagInput(e.target.value.toLowerCase())}
-                                                placeholder="Enter tag"
-                                                className="border-2 rounded-md outline-none border-purple-700 p-2"
-                                                onKeyDown={(e) => handleKeyDown(e, btnRef)}
-                                            />
-                                            <Button
-                                                text="Add Tag"
-                                                onClick={addTag}
-                                                variant="primary"
-                                                size="sm"
-                                                reference={btnRef}
-                                            />
-                                        </div>
-                                        <div className="flex gap-2 mt-2 flex-wrap">
-                                            {tags.map((tag, index) => (
-                                                <span
-                                                    key={index}
-                                                    className="bg-purple-200 text-purple-700 px-2 py-1 rounded-md flex items-center gap-1"
-                                                >
-                                                    {tag}
-                                                    <button onClick={() => removeTag(tag)}>×</button>
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-               
-               
-               
-               <div className=' mt-4'>
-                <h1 className='text-gray-800 text-lg font-bold'>Type</h1>
-                    <div className=" justify-center w-96 flex flex-wrap gap-2  p-2 ">
-                        
-                        <Button size='md' text="Youtube" variant={type === ContentType.Youtube ?
-                        "primary" : "secondary"} onClick={() => {
-                            setType(ContentType.Youtube)
-                        }}/>
-                        <Button size='md' text="Twitter" variant={type === ContentType.Twitter ?
-                        "primary" : "secondary"} onClick={() => {
-                            setType(ContentType.Twitter)
-                        }}/>
-                        <Button size='md' text="Instagram" variant={type === ContentType.Instagram ?
-                        "primary" : "secondary"} onClick={() => {
-                            setType(ContentType.Instagram)
-                        }}/>
-                        <Button size='md' text="Facebook" variant={type === ContentType.Facebook ?
-                        "primary" : "secondary"} onClick={() => {
-                            setType(ContentType.Facebook)
-                        }}/>
-                        <Button size='md' text="Pinterest" variant={type === ContentType.Pinterest ?
-                        "primary" : "secondary"} onClick={() => {
-                            setType(ContentType.Pinterest)
-                        }}/>
-                        <Button size='md' text="Doc" variant={type === ContentType.Doc ?
-                        "primary" : "secondary"} onClick={() => {
-                            setType(ContentType.Doc)
-                        }}/>
-                    </div> 
-               </div>
-                <div className='flex justify-center p-4 '>
-                <Button onClick={addContent} variant='primary'size='md' transition='1' text='Submit' loading={loading} endIcon={loading ? <ProcessingIcon/> : <></>}/>
-                </div>
-                </div>
-                <div className='justify-center h-60 mt-4 '>
-                <div className=' p-4 border-2 w-96 rounded-md bg-purple-50 text-purple-700 border-purple-700'><h3 className='text-sm font-bold'>Important Note:</h3>
-                <h4 className=' text-sm'>Please ensure that you only use website URLs 
-                <h1>(e.g., https://www.example.com) when adding links to our platform. <h1 className='text-pink-600 font-bold'>For IG use Copy link of website</h1> </h1>
-                <h4>Mobile app shared URLs (e.g., example://) will not work.</h4></h4></div>
-                <div className=' gap-4 mt-2 pl-12'>
-                <img className="h-34 rounded-md w-72 pb-2 border-2 border-gray-400 " src={TwitterImg} alt="Twitter" />
-                <img className="h-34 rounded-md w-72 mt-2 border-2 border-gray-400 " src={YtImg} alt="YouTube" />
-                </div>
-               
-                </div>
-                </div>
-           </span> 
-        </div>
-                </div>
-                
-
-            </div>} 
-        </div>
+      refresh();
+      onClose();
+    } catch {
+      alert('Failed to create content. Please try again.');
+    } finally {
+      setLoading(false);
     }
+  }
 
-    
-export default CreateContent 
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50">
+      {/* Overlay */}
+      <div className="cc-overlay absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+
+      {/* Centered wrapper with safe padding */}
+      <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-4 md:p-6">
+        {/* Floating blobs */}
+        <div className="cc-float absolute -top-10 -left-10 w-40 h-40 rounded-full bg-violet-700/40 blur-2xl pointer-events-none" />
+        <div className="cc-float absolute -bottom-10 -right-10 w-48 h-48 rounded-full bg-fuchsia-700/30 blur-3xl pointer-events-none" />
+
+        {/* Modal Card */}
+        <div
+          ref={modalCardRef}
+          className="
+            relative w-full
+            max-w-[min(100vw-1.5rem,56rem)] sm:max-w-[min(100vw-2rem,60rem)] md:max-w-[min(100vw-3rem,64rem)]
+            lg:max-w-5xl
+            max-h-[90vh]
+            rounded-2xl border border-violet-700/60 bg-neutral-900 text-white shadow-2xl
+            flex flex-col
+          "
+        >
+          {/* Sticky header */}
+          <div className="sticky top-0 z-10 flex items-center justify-end p-2 bg-neutral-900/90 backdrop-blur-sm rounded-t-2xl">
+            <button
+              aria-label="Close"
+              onClick={onClose}
+              className="inline-flex items-center justify-center rounded-full p-2 text-gray-300 hover:text-white hover:bg-white/10 transition"
+            >
+              <CloseIcon size="lg" />
+            </button>
+          </div>
+
+          {/* Scrollable content */}
+          <div className="grow overflow-y-auto px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 md:pb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+              {/* Left: Form */}
+              <div>
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-4">Add Title and Link</h3>
+
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="cc-title" className="block text-sm text-gray-300 mb-2">Title</label>
+                    <input
+                      id="cc-title"
+                      ref={titleRef}
+                      type="text"
+                      placeholder="e.g. Elon Musk on X: 'Cybertruck...'"
+                      onKeyDown={(e) => handleKeyDown(e, linkRef)}
+                      className="w-full rounded-xl bg-black/50 border border-gray-700 focus:border-violet-500 focus:ring-violet-500
+                                 text-white placeholder-gray-400 px-3 sm:px-4 py-2.5 sm:py-3 outline-none transition"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="cc-link" className="block text-sm text-gray-300 mb-2">Link</label>
+                    <input
+                      id="cc-link"
+                      ref={linkRef}
+                      type="url"
+                      placeholder="https://www.example.com/post/123"
+                      onKeyDown={(e) => handleKeyDown(e, descriptionRef)}
+                      className="w-full rounded-xl bg-black/50 border border-gray-700 focus:border-violet-500 focus:ring-violet-500
+                                 text-white placeholder-gray-400 px-3 sm:px-4 py-2.5 sm:py-3 outline-none transition"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="cc-desc" className="block text-sm text-gray-300 mb-2">Description</label>
+                    <textarea
+                      id="cc-desc"
+                      ref={descriptionRef}
+                      rows={4}
+                      placeholder="Short description about this link..."
+                      className="w-full rounded-xl bg-black/50 border border-gray-700 focus:border-violet-500 focus:ring-violet-500
+                                 text-white placeholder-gray-400 px-3 sm:px-4 py-2.5 sm:py-3 outline-none transition resize-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div className="mt-6">
+                  <h4 className="text-base sm:text-lg font-semibold mb-3">Tags</h4>
+                  <div className="flex gap-2">
+                    <input
+                      ref={tagInputRef}
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
+                      placeholder="Enter tag"
+                      onKeyDown={(e) => (e.key === 'Enter' ? addTag() : undefined)}
+                      className="flex-1 rounded-xl bg-black/50 border border-gray-700 focus:border-violet-500 focus:ring-violet-500
+                                 text-white placeholder-gray-400 px-3 sm:px-4 py-2.5 sm:py-3 outline-none transition"
+                    />
+                    <button
+                      type="button"
+                      onClick={addTag}
+                      className="inline-flex items-center justify-center rounded-xl bg-violet-600 hover:bg-violet-700
+                                 text-white font-semibold px-4 sm:px-5 py-2.5 sm:py-3 transition shadow-lg hover:shadow-violet-700/30"
+                    >
+                      Add Tag
+                    </button>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-2 rounded-full bg-violet-700/20 text-violet-300 border border-violet-600/40 px-3 py-1.5 text-sm"
+                      >
+                        #{tag}
+                        <button
+                          onClick={() => removeTag(tag)}
+                          className="hover:text-white transition"
+                          aria-label={`Remove ${tag}`}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Type selector */}
+                <div className="mt-6">
+                  <h4 className="text-base sm:text-lg font-semibold mb-3">Type</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {(
+                      [
+                        ['Youtube', ContentType.Youtube],
+                        ['Twitter', ContentType.Twitter],
+                        ['Instagram', ContentType.Instagram],
+                        ['Facebook', ContentType.Facebook],
+                        ['Pinterest', ContentType.Pinterest],
+                        ['Link', ContentType.Doc],
+                      ] as const
+                    ).map(([label, val]) => {
+                      const active = type === val;
+                      return (
+                        <button
+                          key={val}
+                          type="button"
+                          onClick={() => setType(val)}
+                          className={[
+                            'px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border transition font-medium',
+                            active
+                              ? 'bg-violet-600 border-violet-600 text-white shadow-md'
+                              : 'bg-transparent border-gray-700 text-gray-300 hover:border-violet-500 hover:text-white',
+                          ].join(' ')}
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Submit */}
+                <div className="mt-6 pb-2">
+                  <button
+                    ref={submitBtnRef}
+                    onClick={addContent}
+                    disabled={loading}
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-full
+                               bg-violet-600 hover:bg-violet-700 disabled:opacity-70 disabled:cursor-not-allowed
+                               text-white font-semibold px-6 py-3 transition shadow-lg hover:shadow-violet-700/30"
+                  >
+                    {loading && (
+                      <span className="inline-block h-5 w-5 border-2 border-white/60 border-t-transparent rounded-full animate-spin" />
+                    )}
+                    {loading ? 'Submitting…' : 'Submit'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Right: Notes & Previews */}
+              <div>
+                <div className="rounded-xl border border-violet-700/60 bg-violet-900/10 p-4">
+                  <h5 className="text-sm font-bold text-violet-200">Important Note:</h5>
+                  <p className="mt-1 text-sm text-violet-200/90">
+                    Please ensure that only website URLs are used when adding links to the platform.
+                    Example: https://www.example.com
+                  </p>
+                  <p className="mt-2 text-sm">
+                    <span className="text-pink-400 font-semibold">For IG</span> use the copy link of the website post.
+                    Mobile app shared URLs (e.g., example://) will not work.
+                  </p>
+                </div>
+
+                <div className="mt-4 flex flex-col items-center gap-3">
+                  <img className="w-full max-w-sm object-contain rounded-lg border border-gray-700" src={TwitterImg} alt="Twitter example" />
+                  <img className="w-full max-w-sm object-contain rounded-lg border border-gray-700" src={YtImg} alt="YouTube example" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+  );
+};
+
+export default CreateContent;

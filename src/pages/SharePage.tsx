@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { BACKEND_URL } from "../../Config";
-import ExpiredImg from '../../assets/LinkExpired.png'
-import Button from "../UI/Button";
-import ViewPost from "../UI/ViewPost";
-import { ShareCard } from "../UI/ShareCard";
-import { Processing } from "../../icons/Processing";
+import { BACKEND_URL } from "../Config";
+import ExpiredImg from '../assets/LinkExpired.png'
+import Button from "../components/UI/Button";
+import ViewPost from "../components/UI/ViewPost";
+import { ShareCard } from "../components/UI/ShareCard";
+import { Processing } from "../icons/Processing";
 interface ShareContent  {
     username: string;
     content: {
@@ -50,11 +50,11 @@ export const SharePage: React.FC = () => {
     }, []);
 
     if(error) {
-        return  <div className=" h-screen -mt-60 bg-white">
+        return  <div className=" h-screen -mt-60 bg-neutral-950">
         <div className="mt-48 pt-40 flex items-center  justify-center text-red-600">
             <img className="h-48 w-72 pl-16" src={ExpiredImg} alt="Link Expired" />
             </div>
-            <div className=" flex items-center justify-center text-2xl text-red-600">
+            <div className=" flex items-center justify-center text-sm lg:text-2xl text-red-600">
             <div>{error}</div>;     
             </div>
             <div className="flex justify-center items-center mt-40">
@@ -75,9 +75,9 @@ export const SharePage: React.FC = () => {
       
 
     return(
-        <div className="p-4 min-h-screen  bg-white">
-            <h1 className="text-3xl font-bold text-gray-700 mb-8 pl-2">{data?.username}'s Shared Content</h1>
-            <div className="flex gap-4 flex-wrap">
+        <div className="p-4 min-h-screen  bg-neutral-950">
+            <h1 className="text-3xl font-bold text-white mb-8 pl-2">{data?.username}'s Shared Content</h1>
+            <div className="flex gap-4 pl-8 lg:pl-1 flex-wrap">
                 {data?.content.map(({ _id,type, link, title}, index) => <ShareCard
                     key={index} 
                     type={type} 
